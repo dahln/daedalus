@@ -156,11 +156,12 @@ else if(results.Total == 0 && Ready)
     async public Task SearchConditions(int page)
     {
         var selectedPeriod = Periods.Where(p => p.PeriodType == ReportPeriod).FirstOrDefault();
-        Start = selectedPeriod.Start;
-        End = selectedPeriod.End;
+        Start = selectedPeriod.Start.ToLocalTime();
+        End = selectedPeriod.End.ToLocalTime();
+        long localOffsetTicks = TimeZoneInfo.Local.BaseUtcOffset.Ticks;
 
         Page = page;
-        results = await API.SearchConditions(Start.Ticks, End.Ticks, Page, Size);
+        results = await API.SearchConditions(Start.Ticks, End.Ticks, localOffsetTicks, Page, Size);
     }
 }
 
