@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @using daedalus.Shared.Model
+@using FluentDateTime
 
 @inject daedalus.Client.Services.API API
 
@@ -32,9 +33,9 @@
                     <i class="fas fa-temperature-high"></i> Temperature 
                 </h5>
                 <div class="card-body">
-                    <h6 class="card-title">Low: <span class="low">@(Math.Round(results.LowTemperature, 2).ToString("0.00")) &deg;</span></h6>
-                    <h6 class="card-title">Average: <span class="average">@(Math.Round(results.AverageTemperature, 2).ToString("0.00")) &deg;</span></h6>
-                    <h6 class="card-title">High: <span class="high">@(Math.Round(results.HighTemperature, 2).ToString("0.00")) &deg;</span></h6>
+                    <h6 class="card-title">Low: <span class="low">@(Math.Round((results.LowTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.LowTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
+                    <h6 class="card-title">Average: <span class="average">@(Math.Round((results.AverageTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.AverageTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
+                    <h6 class="card-title">High: <span class="high">@(Math.Round((results.LowTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.LowTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
                 </div>
             </div>
         </div>
@@ -97,7 +98,7 @@
                     {
                         <tr>
                             <td>@condition.LoggedAt.ToLocalTime()</td>
-                            <td>@(Math.Round(condition.DegreesCelsius, 2).ToString("0.00")) &deg;C</td>
+                            <td>@(Math.Round((condition.DegreesCelsius * 1.8) + 32, 2).ToString("0.00")) &deg;F &ThickSpace;(@(Math.Round(condition.DegreesCelsius, 2).ToString("0.00")) &deg;C)</td>
                             <td>@(Math.Round(condition.HumidityPercentage, 2).ToString("0.00")) %</td>
                             <td>@(Math.Round(condition.PressureMillibars, 2).ToString("0.00")) mbar</td>
                         </tr>
@@ -147,13 +148,13 @@ else if(results.Total == 0 && Ready)
 
     protected override async Task OnParametersSetAsync()
     {
-        Periods = Reporting.GetReportPeriods();
+        Periods = GetReportPeriods();
 
         await SearchConditions(0);
         Ready = true;
     }
 
-    async public Task SearchConditions(int page)
+    async private Task SearchConditions(int page)
     {
         var selectedPeriod = Periods.Where(p => p.PeriodType == ReportPeriod).FirstOrDefault();
         Start = selectedPeriod.Start.ToLocalTime();
@@ -162,6 +163,79 @@ else if(results.Total == 0 && Ready)
 
         Page = page;
         results = await API.SearchConditions(Start.Ticks, End.Ticks, localOffsetTicks, Page, Size);
+    }
+
+    private List<Period> GetReportPeriods()
+    {
+
+        DateTime todayStart = DateTime.UtcNow.BeginningOfDay();
+        DateTime todayEnd = DateTime.UtcNow.EndOfDay();
+
+        DateTime yesterdayStart = DateTime.UtcNow.PreviousDay().BeginningOfDay();
+        DateTime yesterdayEnd = DateTime.UtcNow.PreviousDay().EndOfDay();
+
+        DateTime lastSevenStart = DateTime.UtcNow.Subtract(new TimeSpan(7, 0, 0, 0)).BeginningOfDay();
+        DateTime lastSevenEnd = DateTime.UtcNow.EndOfDay();
+
+        DateTime currentMonthStart = DateTime.UtcNow.FirstDayOfMonth().BeginningOfDay();
+        DateTime currentMonthEnd = DateTime.UtcNow.LastDayOfMonth().EndOfDay();
+
+        DateTime lastMonthStart = DateTime.UtcNow.PreviousMonth().FirstDayOfMonth().BeginningOfDay();
+        DateTime lastMonthEnd = DateTime.UtcNow.PreviousMonth().LastDayOfMonth().EndOfDay();
+
+        DateTime currentYearStart = DateTime.UtcNow.FirstDayOfYear().BeginningOfDay();
+        DateTime currentYearEnd = DateTime.UtcNow.LastDayOfYear().EndOfDay();
+
+        DateTime previousYearStart = DateTime.UtcNow.PreviousYear().FirstDayOfYear().BeginningOfDay();
+        DateTime previousYearEnd = DateTime.UtcNow.PreviousYear().LastDayOfYear().EndOfDay();
+
+        List<Period> periods = new List<Period>()
+                {
+                    new Period()
+                    {
+                        PeriodType = PeriodType.Today,
+                        Start = todayStart,
+                        End = todayEnd,
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.Yesterday,
+                        Start = yesterdayStart,
+                        End = yesterdayEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.LastSeven,
+                        Start = lastSevenStart,
+                        End = lastSevenEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.CurrentMonth,
+                        Start = currentMonthStart,
+                        End = currentMonthEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.PreviousMonth,
+                        Start = lastMonthStart,
+                        End = lastMonthEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.CurrentYear,
+                        Start = currentYearStart,
+                        End = currentYearEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.PreviousYear,
+                        Start = previousYearStart,
+                        End = previousYearEnd
+                    }
+                };
+
+        return periods;
     }
 }
 
