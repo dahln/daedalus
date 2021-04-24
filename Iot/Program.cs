@@ -48,7 +48,6 @@ namespace daedalus.iot
 
                 var condition = new Shared.Model.Condition()
                 {
-                    LoggedAt = DateTime.UtcNow,
                     DegreesCelsius = tempValue.DegreesCelsius,
                     PressureMillibars = preValue.Millibars,
                     HumidityPercentage = humValue.Percent

@@ -15,7 +15,7 @@ namespace daedalus.Shared.Model
     public class Condition
     {
         public string Id { get; set; }
-        public DateTime LoggedAt { get; set; }
+        public DateTime LoggedAt { get; set; } = DateTime.UtcNow;
         public double DegreesCelsius { get; set; }
         public double PressureMillibars { get; set; }
         public double HumidityPercentage { get; set; }
