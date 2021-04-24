@@ -159,7 +159,7 @@ else if(results.Total == 0 && Ready)
         var selectedPeriod = Periods.Where(p => p.PeriodType == ReportPeriod).FirstOrDefault();
         Start = selectedPeriod.Start;
         End = selectedPeriod.End;
-        long localOffsetTicks = TimeZoneInfo.Local.BaseUtcOffset.Ticks;
+        long localOffsetTicks = 0;//TimeZoneInfo.Local.BaseUtcOffset.Ticks;
 
         Page = page;
         results = await API.SearchConditions(Start.Ticks, End.Ticks, localOffsetTicks, Page, Size);
