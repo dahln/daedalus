@@ -157,8 +157,8 @@ else if(results.Total == 0 && Ready)
     async private Task SearchConditions(int page)
     {
         var selectedPeriod = Periods.Where(p => p.PeriodType == ReportPeriod).FirstOrDefault();
-        Start = selectedPeriod.Start.ToLocalTime();
-        End = selectedPeriod.End.ToLocalTime();
+        Start = selectedPeriod.Start;
+        End = selectedPeriod.End;
         long localOffsetTicks = TimeZoneInfo.Local.BaseUtcOffset.Ticks;
 
         Page = page;
