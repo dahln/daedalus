@@ -54,15 +54,17 @@ namespace daedalus.Server.Controllers
         //     return Ok("Cleared");
         // }
 
-        [Route("api/v1/condition/search/{start}/{end}/{offset}/{page}/{size}")]
+        [Route("api/v1/condition/search/{start}/{end}/{offset}/{startDaylightSavingsOffset}/{endDaylightSavingsOffset}/{page}/{size}")]
         [HttpGet]
-        async public Task<IActionResult> SearchCondition(long start, long end, long offset, int page, int size) 
+        async public Task<IActionResult> SearchCondition(long start, long end, long offset, long startDaylightSavingsOffset, long endDaylightSavingsOffset, int page, int size) 
         {
-            DateTime startFilter = new DateTime(start);
-            DateTime endFilter = new DateTime(end);
             offset *= -1;
+            startDaylightSavingsOffset *= -1;
+            endDaylightSavingsOffset *= -1;
+            DateTime startFilter = new DateTime(start).AddTicks(offset).AddTicks(startDaylightSavingsOffset);
+            DateTime endFilter = new DateTime(end).AddTicks(offset).AddTicks(endDaylightSavingsOffset);
 
-            var query = _db.Conditions.Where(c => c.LoggedAt.AddTicks(offset) >= startFilter && c.LoggedAt.AddTicks(offset) < endFilter);
+            var query = _db.Conditions.Where(c => c.LoggedAt >= startFilter && c.LoggedAt < endFilter);
 
             var response = new Shared.Model.ConditionSearchResponse();
 

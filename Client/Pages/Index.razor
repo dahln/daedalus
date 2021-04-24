@@ -24,18 +24,18 @@
     </div>
 </div>
 
-@if(results.Total > 0 && Ready)
+@if (results.Total > 0 && Ready)
 {
     <div class="row mt-3">
         <div class="col-lg-3 mt-2">
             <div class="card">
                 <h5 class="card-header">
-                    <i class="fas fa-temperature-high"></i> Temperature 
+                    <i class="fas fa-temperature-high"></i> Temperature
                 </h5>
                 <div class="card-body">
                     <h6 class="card-title">Low: <span class="low">@(Math.Round((results.LowTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.LowTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
                     <h6 class="card-title">Average: <span class="average">@(Math.Round((results.AverageTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.AverageTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
-                    <h6 class="card-title">High: <span class="high">@(Math.Round((results.LowTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.LowTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
+                    <h6 class="card-title">High: <span class="high">@(Math.Round((results.HighTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.HighTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 table-responsive">
-            <table class="table table-hover">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Logged At</th>
@@ -125,7 +125,7 @@
         </div>
     </div>
 }
-else if(results.Total == 0 && Ready)
+else if (results.Total == 0 && Ready)
 {
     <div class="row mt-5">
         <div class="col-md-12">
@@ -156,13 +156,28 @@ else if(results.Total == 0 && Ready)
 
     async private Task SearchConditions(int page)
     {
+        //Get the start and end dates from the picker
         var selectedPeriod = Periods.Where(p => p.PeriodType == ReportPeriod).FirstOrDefault();
         Start = selectedPeriod.Start;
         End = selectedPeriod.End;
+
+        //Dates are stored in UTC. The server requires the offset (in ticks) from Local to UTC
         long localOffsetTicks = TimeZoneInfo.Local.BaseUtcOffset.Ticks;
 
+        //For regions that use Daylight Savings, check if the date provided needs an offset, if so provide it, otherwise use 0.
+        long startDaylightSavingsOffset = 0;
+        long endDaylightSavingsOffset = 0;
+        var rule = TimeZoneInfo.Local.GetAdjustmentRules().ToList().OrderBy(x => x.DateEnd).FirstOrDefault();
+        if (rule != null)
+        {
+            if (TimeZoneInfo.Local.IsDaylightSavingTime(Start))
+                startDaylightSavingsOffset = TimeSpan.FromHours(1).Ticks;// rule.DaylightDelta.Ticks;
+            if (TimeZoneInfo.Local.IsDaylightSavingTime(End))
+                endDaylightSavingsOffset = TimeSpan.FromHours(1).Ticks;// rule.DaylightDelta.Ticks;
+        }
+
         Page = page;
-        results = await API.SearchConditions(Start.Ticks, End.Ticks, localOffsetTicks, Page, Size);
+        results = await API.SearchConditions(Start.Ticks, End.Ticks, localOffsetTicks, startDaylightSavingsOffset, endDaylightSavingsOffset, Page, Size);
     }
 
     private List<Period> GetReportPeriods()
@@ -190,7 +205,7 @@ else if(results.Total == 0 && Ready)
         DateTime previousYearEnd = DateTime.UtcNow.PreviousYear().LastDayOfYear().EndOfDay();
 
         List<Period> periods = new List<Period>()
-                {
+            {
                     new Period()
                     {
                         PeriodType = PeriodType.Today,
