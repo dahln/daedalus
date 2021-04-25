@@ -33,7 +33,7 @@ namespace daedalus.Shared.Model
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public int Page { get; set; }
-        public int Size { get; set; } = 10;
+        public int Size { get; set; } = 10000;
     }
 
     public class ConditionSearchResponse

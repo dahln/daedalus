@@ -161,13 +161,15 @@ else if (results.Total == 0 && Ready)
         Start = selectedPeriod.Start;
         End = selectedPeriod.End;
 
+        //Update the component 'Page' property and then pass it to the server
+        Page = page;
         Search model = new Search()
         {
             Start = Start,
-            End = End
+            End = End,
+            Page = page
         };
 
-        Page = page;
         results = await API.SearchConditions(model);
     }
 
