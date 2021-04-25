@@ -12,6 +12,7 @@ using JWT.Builder;
 using JWT.Algorithms;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using daedalus.Shared.Model;
 
 namespace daedalus.Server.Controllers
 {
@@ -54,17 +55,11 @@ namespace daedalus.Server.Controllers
         //     return Ok("Cleared");
         // }
 
-        [Route("api/v1/condition/search/{start}/{end}/{offset}/{startDaylightSavingsOffset}/{endDaylightSavingsOffset}/{page}/{size}")]
-        [HttpGet]
-        async public Task<IActionResult> SearchCondition(long start, long end, long offset, long startDaylightSavingsOffset, long endDaylightSavingsOffset, int page, int size) 
+        [Route("api/v1/condition/search")]
+        [HttpPost]
+        async public Task<IActionResult> SearchCondition([FromBody] Search model) 
         {
-            offset *= -1;
-            startDaylightSavingsOffset *= -1;
-            endDaylightSavingsOffset *= -1;
-            DateTime startFilter = new DateTime(start).AddTicks(offset).AddTicks(startDaylightSavingsOffset);
-            DateTime endFilter = new DateTime(end).AddTicks(offset).AddTicks(endDaylightSavingsOffset);
-
-            var query = _db.Conditions.Where(c => c.LoggedAt >= startFilter && c.LoggedAt < endFilter);
+            var query = _db.Conditions.Where(c => c.LoggedAt >= model.Start.ToUniversalTime() && c.LoggedAt <= model.End.ToUniversalTime());
 
             var response = new Shared.Model.ConditionSearchResponse();
 
@@ -85,7 +80,7 @@ namespace daedalus.Server.Controllers
             response.Total = await query.CountAsync();
 
             response.Data = await query.OrderByDescending(r => r.LoggedAt)
-                                                            .Skip(page * size).Take(size)
+                                                            .Skip(model.Page * model.Size).Take(model.Size)
                                                             .Select(r => r.ToSharedCondition()).ToListAsync();
 
             return Ok(response);

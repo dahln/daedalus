@@ -28,9 +28,9 @@ namespace daedalus.Client.Services
             _spinnerService = spinnerService;
         }
         
-        async public Task<ConditionSearchResponse> SearchConditions(long start, long end, long offset, long startDaylightSavingsOffset, long endDaylightSavingsOffset, int page, int size)
+        async public Task<ConditionSearchResponse> SearchConditions(Search model)
         {
-            return await GetAsync<ConditionSearchResponse>($"api/v1/condition/search/{start}/{end}/{offset}/{startDaylightSavingsOffset}/{endDaylightSavingsOffset}/{page}/{size}");
+            return await PostAsync<ConditionSearchResponse>($"api/v1/condition/search", model);
         }
 
         #region HTTP Methods

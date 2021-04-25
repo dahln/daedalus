@@ -21,6 +21,21 @@ namespace daedalus.Shared.Model
         public double HumidityPercentage { get; set; }
     }
 
+    public class Period
+    {
+        public PeriodType PeriodType { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+    }
+
+    public class Search
+    {
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public int Page { get; set; }
+        public int Size { get; set; } = 10;
+    }
+
     public class ConditionSearchResponse
     {
         public List<Condition> Data { get; set; } = new List<Condition>();

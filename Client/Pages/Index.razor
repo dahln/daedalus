@@ -161,48 +161,39 @@ else if (results.Total == 0 && Ready)
         Start = selectedPeriod.Start;
         End = selectedPeriod.End;
 
-        //Dates are stored in UTC. The server requires the offset (in ticks) from Local to UTC
-        long localOffsetTicks = TimeZoneInfo.Local.BaseUtcOffset.Ticks;
-
-        //For regions that use Daylight Savings, check if the date provided needs an offset, if so provide it, otherwise use 0.
-        long startDaylightSavingsOffset = 0;
-        long endDaylightSavingsOffset = 0;
-        var rule = TimeZoneInfo.Local.GetAdjustmentRules().ToList().OrderBy(x => x.DateEnd).FirstOrDefault();
-        if (rule != null)
+        Search model = new Search()
         {
-            if (TimeZoneInfo.Local.IsDaylightSavingTime(Start))
-                startDaylightSavingsOffset = TimeSpan.FromHours(1).Ticks;// rule.DaylightDelta.Ticks;
-            if (TimeZoneInfo.Local.IsDaylightSavingTime(End))
-                endDaylightSavingsOffset = TimeSpan.FromHours(1).Ticks;// rule.DaylightDelta.Ticks;
-        }
+            Start = Start,
+            End = End
+        };
 
         Page = page;
-        results = await API.SearchConditions(Start.Ticks, End.Ticks, localOffsetTicks, startDaylightSavingsOffset, endDaylightSavingsOffset, Page, Size);
+        results = await API.SearchConditions(model);
     }
 
     private List<Period> GetReportPeriods()
     {
 
-        DateTime todayStart = DateTime.UtcNow.BeginningOfDay();
-        DateTime todayEnd = DateTime.UtcNow.EndOfDay();
+        DateTime todayStart = DateTime.Now.BeginningOfDay();
+        DateTime todayEnd = DateTime.Now.EndOfDay();
 
-        DateTime yesterdayStart = DateTime.UtcNow.PreviousDay().BeginningOfDay();
-        DateTime yesterdayEnd = DateTime.UtcNow.PreviousDay().EndOfDay();
+        DateTime yesterdayStart = DateTime.Now.PreviousDay().BeginningOfDay();
+        DateTime yesterdayEnd = DateTime.Now.PreviousDay().EndOfDay();
 
-        DateTime lastSevenStart = DateTime.UtcNow.Subtract(new TimeSpan(7, 0, 0, 0)).BeginningOfDay();
-        DateTime lastSevenEnd = DateTime.UtcNow.EndOfDay();
+        DateTime lastSevenStart = DateTime.Now.Subtract(new TimeSpan(7, 0, 0, 0)).BeginningOfDay();
+        DateTime lastSevenEnd = DateTime.Now.EndOfDay();
 
-        DateTime currentMonthStart = DateTime.UtcNow.FirstDayOfMonth().BeginningOfDay();
-        DateTime currentMonthEnd = DateTime.UtcNow.LastDayOfMonth().EndOfDay();
+        DateTime currentMonthStart = DateTime.Now.FirstDayOfMonth().BeginningOfDay();
+        DateTime currentMonthEnd = DateTime.Now.LastDayOfMonth().EndOfDay();
 
-        DateTime lastMonthStart = DateTime.UtcNow.PreviousMonth().FirstDayOfMonth().BeginningOfDay();
-        DateTime lastMonthEnd = DateTime.UtcNow.PreviousMonth().LastDayOfMonth().EndOfDay();
+        DateTime lastMonthStart = DateTime.Now.PreviousMonth().FirstDayOfMonth().BeginningOfDay();
+        DateTime lastMonthEnd = DateTime.Now.PreviousMonth().LastDayOfMonth().EndOfDay();
 
-        DateTime currentYearStart = DateTime.UtcNow.FirstDayOfYear().BeginningOfDay();
-        DateTime currentYearEnd = DateTime.UtcNow.LastDayOfYear().EndOfDay();
+        DateTime currentYearStart = DateTime.Now.FirstDayOfYear().BeginningOfDay();
+        DateTime currentYearEnd = DateTime.Now.LastDayOfYear().EndOfDay();
 
-        DateTime previousYearStart = DateTime.UtcNow.PreviousYear().FirstDayOfYear().BeginningOfDay();
-        DateTime previousYearEnd = DateTime.UtcNow.PreviousYear().LastDayOfYear().EndOfDay();
+        DateTime previousYearStart = DateTime.Now.PreviousYear().FirstDayOfYear().BeginningOfDay();
+        DateTime previousYearEnd = DateTime.Now.PreviousYear().LastDayOfYear().EndOfDay();
 
         List<Period> periods = new List<Period>()
             {
