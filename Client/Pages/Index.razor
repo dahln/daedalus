@@ -98,7 +98,7 @@
                     {
                         <tr>
                             <td>@condition.LoggedAt.ToLocalTime()</td>
-                            <td>@(Math.Round((condition.DegreesCelsius * 1.8) + 32, 2).ToString("0.00")) &deg;F &ThickSpace;(@(Math.Round(condition.DegreesCelsius, 2).ToString("0.00")) &deg;C)</td>
+                            <td>@(Math.Round((condition.DegreesCelsius * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(condition.DegreesCelsius, 2).ToString("0.00"))&deg;C)</td>
                             <td>@(Math.Round(condition.HumidityPercentage, 2).ToString("0.00")) %</td>
                             <td>@(Math.Round(condition.PressureMillibars, 2).ToString("0.00")) mbar</td>
                         </tr>
