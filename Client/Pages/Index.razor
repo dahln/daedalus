@@ -69,34 +69,31 @@
         <div class="col-lg-6">
             <div class="input-group page-size mb-3">
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputGroupSelect01">Page Size</label>
+                    <label class="input-group-text" for="inputGroupSelect01">Size</label>
                 </div>
-                <select class="form-control" value="@SizeOption" @onchange="PageSizeChange">
+                <select class="form-control" value="@Size" @onchange="PageSizeChange">
                     <option value="10">10</option>
                     <option value="60">60</option>
                     <option value="120">120</option>
-                    <option value="All">All</option>
+                    <option value="240">240</option>
                 </select>
             </div>
         </div>
-        @if (Size != null)
-        {
-            <div class="col-lg-6">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination float-right">
-                        @if ((Page + 1) > 1)
-                        {
-                            <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page - 1))">Previous</div></li>
-                        }
-                        <li class="page-item"><div class="page-link">Page @(results.Total == 0 ? 0 : (Page + 1)) of @(Math.Ceiling((double)results.Total / Size.Value))</div></li>
-                        @if ((Page + 1) < (Math.Ceiling((double)results.Total / Size.Value)))
-                        {
-                            <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page + 1))">Next</div></li>
-                        }
-                    </ul>
-                </nav>
-            </div>
-        }
+        <div class="col-lg-6">
+            <nav aria-label="Page navigation">
+                <ul class="pagination float-right">
+                    @if ((Page + 1) > 1)
+                    {
+                        <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page - 1))">Previous</div></li>
+                    }
+                    <li class="page-item"><div class="page-link">Page @(results.Total == 0 ? 0 : (Page + 1)) of @(Math.Ceiling((double)results.Total / Size))</div></li>
+                    @if ((Page + 1) < (Math.Ceiling((double)results.Total / Size)))
+                    {
+                        <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page + 1))">Next</div></li>
+                    }
+                </ul>
+            </nav>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-12 table-responsive">
@@ -134,8 +131,8 @@
                         {
                             <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page - 1))">Previous</div></li>
                         }
-                        <li class="page-item"><div class="page-link">Page @(results.Total == 0 ? 0 : (Page + 1)) of @(Math.Ceiling((double)results.Total / Size.Value))</div></li>
-                        @if ((Page + 1) < (Math.Ceiling((double)results.Total / Size.Value)))
+                        <li class="page-item"><div class="page-link">Page @(results.Total == 0 ? 0 : (Page + 1)) of @(Math.Ceiling((double)results.Total / Size))</div></li>
+                        @if ((Page + 1) < (Math.Ceiling((double)results.Total / Size)))
                         {
                             <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page + 1))">Next</div></li>
                         }
@@ -158,8 +155,7 @@ else if (results.Total == 0 && Ready)
 @code {
 
     private bool Ready { get; set; } = false;
-    private int? Size { get; set; } = 10;
-    private string SizeOption { get; set; } = "10";
+    private int Size { get; set; } = 10;
     private int Page { get; set; }
     private DateTime Start { get; set; } = DateTime.UtcNow.AddHours(-4).ToLocalTime();
     private DateTime End { get; set; } = DateTime.UtcNow.ToLocalTime();
@@ -198,11 +194,7 @@ else if (results.Total == 0 && Ready)
     async private Task PageSizeChange(ChangeEventArgs e)
     {
         var value = e.Value.ToString();
-        if (value == "All")
-        {
-            Size = null;
-        }
-        else if (int.TryParse(e.Value.ToString(), out int size))
+        if (int.TryParse(e.Value.ToString(), out int size))
         {
             Size = size;
         }
