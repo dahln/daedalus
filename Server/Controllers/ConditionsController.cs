@@ -79,9 +79,17 @@ namespace daedalus.Server.Controllers
 
             response.Total = await query.CountAsync();
 
-            response.Data = await query.OrderByDescending(r => r.LoggedAt)
-                                                            .Skip(model.Page * model.Size).Take(model.Size)
-                                                            .Select(r => r.ToSharedCondition()).ToListAsync();
+            if(model.Size != null)
+            {
+                response.Data = await query.OrderByDescending(r => r.LoggedAt)
+                                            .Skip(model.Page * model.Size.Value).Take(model.Size.Value)
+                                            .Select(r => r.ToSharedCondition()).ToListAsync();
+            }
+            else
+            {
+                response.Data = await query.OrderByDescending(r => r.LoggedAt)
+                                            .Select(r => r.ToSharedCondition()).ToListAsync();
+            }
 
             return Ok(response);
         }
