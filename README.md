@@ -43,6 +43,10 @@ WantedBy=multi-user.target
 </pre>
 </code>
 
+#### Re-Arch Ideas
+1. Switching the server side to use Azure Functions and HTTP triggers.
+2. If the Web App is converted to Azure Functions, the Blazor app could be converted into a static web app, that uses an Azure function to query and display data.
+
 
 
 
