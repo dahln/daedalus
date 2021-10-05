@@ -2,13 +2,13 @@
 
 https://docs.microsoft.com/en-us/dotnet/iot/
 
-### On Pi:
+### On Pi, in Home "pi" user "Home" directory:
 mkdir daedalus
 
 ### From dev machine, in project directory.
 dotnet publish
 
-scp -r .\bin\Debug\net5.0\publish\\* pi@picdp:/home/pi/daedalus
+scp -r .\bin\Debug\net5.0\publish\\* pi@daedalusio:/home/pi/daedalus
 
 ### Run on Pi:
 dotnet daedalus.iot.dll &
@@ -42,6 +42,14 @@ WantedBy=multi-user.target
 
 </pre>
 </code>
+
+<pre>
+<code>
+sudo systemctl enable daedalus.service
+sudo systemctl restart daedalus.service
+sudo systemctl status daedalus.service
+</code>
+</pre>
 
 #### Re-Arch Ideas
 1. Switching the server side to use Azure Functions and HTTP triggers.
