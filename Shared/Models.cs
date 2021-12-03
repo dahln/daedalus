@@ -39,7 +39,7 @@ namespace daedalus.Shared.Model
     public class ConditionSearchResponse
     {
         public List<Condition> Data { get; set; } = new List<Condition>();
-        public int Total { get; set; }
+        public long Total { get; set; }
 
         public double LowTemperature { get; set; }
         public double HighTemperature { get; set; }
