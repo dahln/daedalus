@@ -1,26 +1,37 @@
 # daedalus
 
-https://docs.microsoft.com/en-us/dotnet/iot/
+### INSTALL RASPBERRY PI OS ON PI
 
-### On Pi, in Home "pi" user "Home" directory:
-mkdir daedalus
+____
+### INSTALL .NET ON RASPBERRY PI
+ - Follow instructions in this repo:
+ - https://github.com/pjgpetecodes/dotnet5pi
+____
+### SETUP APPLICATION DIRECTORY
+### IN THE 'PI' USER HOME DIRECTORY (it just makes it easier)
+ - sudo mkdir daedalus
 
-### From dev machine, in project directory.
-dotnet publish
+____
+### COPY PROJECT FROM DEV MACHINE TO RASPBERRY PI
+ - On "Dev" machine, from "Server" folder
+ - dotnet clean
+ - dotnet build
+ - dotnet publish
+ - scp -r .\bin\Debug\net5.0\publish\\* pi@daedalusiot:/home/pi/daedalus
+   - Where 'daedalusiot' is the name of the raspberry pi. Can use the ip address as well
 
-scp -r .\bin\Debug\net5.0\publish\\* pi@daedalusio:/home/pi/daedalus
+____
+### SETUP SERVER-- INSTALL THIS STUFF
+ - sudo apt install nginx -y
+ - sudo apt install ufw -y
+ - sudo ufw allow 'Nginx Full'
+ - sudo ufw allow 'OpenSSH'
+ - sudo ufw --force enable
 
-### Run on Pi:
-dotnet daedalus.iot.dll &
-
-The '&' makes it run in the background
-
-#### OR 
-Create a background service:
-
-Create file and add content:
-
-sudo nano /etc/systemd/system/daedalus.service
+____
+### CREATE APPLICATION KESTREL SERVICE
+### CREATE THIS FILE, AND THEN ADD THE CONTENT BELOW
+ - sudo nano /etc/systemd/system/daedalus.service
 
 <pre>
 <code>
@@ -29,7 +40,7 @@ Description=daedalus iot process
 
 [Service]
 WorkingDirectory=/home/pi/daedalus
-ExecStart=/opt/dotnet/dotnet /home/pi/daedalus/daedalus.iot.dll
+ExecStart=/opt/dotnet/dotnet /home/pi/daedalus/daedalus.Server.dll
 Restart=always
 # Restart service after 10 seconds if the dotnet service crashes:
 RestartSec=10
@@ -39,22 +50,66 @@ User=pi
 
 [Install]
 WantedBy=multi-user.target
-
-</pre>
 </code>
+</pre>
 
+____
+### ENABLE THE NEW KESTREL SERVICE
+ - sudo systemctl enable daedalus.service
+ - sudo systemctl restart daedalus.service
+
+____
+### CREATE NGINX CONFIG FOR NEW APP
+### EDIT THE EXISTING DEFAULT NGINX CONFIG WITH CODE BELOW
+ - sudo nano /etc/nginx/sites-enabled/default
+
+<pre>
+<code>
+upstream daedalus_server {
+    server localhost:5000;
+}
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        server_name _;
+        location / {
+                proxy_pass         http://daedalus_server;
+                proxy_redirect     off;
+                proxy_set_header   Host $host;
+                proxy_set_header   X-Real-IP $remote_addr;
+                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header   X-Forwarded-Proto $scheme;
+                proxy_set_header   X-Forwarded-Host $server_name;
+                client_max_body_size 32M;
+        }
+}
+</code>
+</pre>
+
+____
+### CHECK THE APP CONFIG AND RESTART NGINX
+ - sudo nginx -t
+ - sudo systemctl restart nginx
+
+____
+### IN BROWSER, NAVIGATE TO IP ADDRESS OF RASPBERRY PI
+
+____
+### HELPFUL TROUBLESHOOTING COMMANDS
 <pre>
 <code>
 sudo systemctl enable daedalus.service
 sudo systemctl restart daedalus.service
 sudo systemctl status daedalus.service
+sudo journalctl -u daedalus.service
+sudo systemctl daemon-reload
+sudo systemctl status nginx
+sudo journalctl -u nginx
 </code>
 </pre>
 
-#### Re-Arch Ideas
-1. Switching the server side to use Azure Functions and HTTP triggers.
-2. If the Web App is converted to Azure Functions, the Blazor app could be converted into a static web app, that uses an Azure function to query and display data.
-
-
-
+____
+### REFERENCES
+ - https://docs.microsoft.com/en-us/dotnet/iot/
 
