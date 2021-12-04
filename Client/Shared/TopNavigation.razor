@@ -1,5 +1,4 @@
 ﻿@inject NavigationManager Navigation
-@inject daedalus.Client.Services.AppState _appState
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/"><i class="fas fa-cloud-sun daedalus-logo mr-3"></i>daedalus</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navToggle" aria-controls="navToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,8 +15,4 @@
 </nav>
 
 @code{      
-    protected override void OnInitialized()
-    {
-        _appState.OnChange += StateHasChanged;
-    }
 }

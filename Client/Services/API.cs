@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using daedalus.Shared;
-using Blazored.Toast.Services;
 using BlazorSpinner;
 using daedalus.Shared.Model;
 
@@ -17,14 +16,12 @@ namespace daedalus.Client.Services
     {
         private HttpClient _httpClient { get; set; }
         private NavigationManager _navigationManger { get; set; }
-        private IToastService _toastService { get; set; }
         private SpinnerService _spinnerService { get; set; }
-        public API(HttpClient httpClient, NavigationManager navigationManager, IToastService toastService, SpinnerService spinnerService)
+        public API(HttpClient httpClient, NavigationManager navigationManager, SpinnerService spinnerService)
         {
             _httpClient = httpClient;
 
             _navigationManger = navigationManager;
-            _toastService = toastService;
             _spinnerService = spinnerService;
         }
         
@@ -101,7 +98,7 @@ namespace daedalus.Client.Services
                 string responseContent = await response.Content.ReadAsStringAsync();
                 if(!string.IsNullOrEmpty(responseContent))
                 {
-                    _toastService.ShowError(responseContent);
+                    //_toastService.ShowError(responseContent);
                 }                    
             }
 

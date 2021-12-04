@@ -7,9 +7,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Blazored.Toast;
-using Blazored.LocalStorage;
-using Blazored.Modal;
 using BlazorSpinner;
 using daedalus.Client.Services;
 
@@ -27,12 +24,7 @@ namespace daedalus.Client
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("daedalus.ServerAPI"));
 
             builder.Services.AddScoped<API>();
-            builder.Services.AddScoped<AppState>();
             builder.Services.AddScoped<SpinnerService>();
-
-            builder.Services.AddBlazoredLocalStorage();
-            builder.Services.AddBlazoredToast();
-            builder.Services.AddBlazoredModal();
 
             await builder.Build().RunAsync();
         }

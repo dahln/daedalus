@@ -1,24 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<UserSecretsId>fd512f31-b0da-4a7a-97dc-12a7eaf98d46</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.3" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.4">
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		  <PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.5" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.4">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		
-		<PackageReference Include="Iot.Device.Bindings" Version="1.4.0" />
+		<PackageReference Include="Iot.Device.Bindings" Version="1.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
