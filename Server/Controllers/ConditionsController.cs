@@ -8,10 +8,7 @@ using daedalus.Shared;
 using daedalus.Server.Database;
 using Microsoft.EntityFrameworkCore;
 using daedalus.Server.Utility;
-using JWT.Builder;
-using JWT.Algorithms;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using daedalus.Shared.Model;
 
 namespace daedalus.Server.Controllers
@@ -27,33 +24,6 @@ namespace daedalus.Server.Controllers
             _db = db;
             _configuration = configuration;
         }
-
-        [Route("api/v1/condition")]
-        [HttpPost]
-        async public Task<IActionResult> LogCondition([FromBody] Shared.Model.CondtionsAsJwt model)
-        {
-            var conditions = model.Decode(_configuration["JWT_Key"]);
-            if (conditions.Count == 0)
-                return BadRequest("No Conditions Saved");
-
-            var dbConditions = conditions.Select(c => c.ToCondition());
-
-            _db.Conditions.AddRange(dbConditions);
-            await _db.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        // [Route("api/v1/condition/clear")]
-        // [HttpGet]
-        // async public Task<IActionResult> Clear() 
-        // {
-        //     var allConditions = _db.Conditions.Where(c => c.Id != null);
-        //     _db.Conditions.RemoveRange(allConditions);
-        //     await _db.SaveChangesAsync();
-
-        //     return Ok("Cleared");
-        // }
 
         [Route("api/v1/condition/search")]
         [HttpPost]

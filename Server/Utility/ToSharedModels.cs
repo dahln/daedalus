@@ -18,24 +18,5 @@ namespace daedalus.Server.Utility
 
             return condition;
         }
-
-        static public Database.Condition ToCondition(this Shared.Model.Condition model)
-        {
-            var condition = new Database.Condition()
-            {
-                Id = model.Id,
-                LoggedAt = model.LoggedAt,
-                DegreesCelsius = model.DegreesCelsius,
-                HumidityPercentage = model.HumidityPercentage,
-                PressureMillibars = model.PressureMillibars
-            };
-            
-            if(string.IsNullOrEmpty(condition.Id))
-            {
-                condition.Id = Guid.NewGuid().ToString();
-            }
-
-            return condition;
-        }
     }
 }

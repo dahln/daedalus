@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using daedalus.Server.Database;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,14 @@ namespace daedalus.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices(services =>
+                {
+                    //Setting up background worker
+                    services.AddDbContext<daedalusDBContext>(options =>
+                        options.UseSqlite($"Data Source=daedalus.db"));
+
+                    services.AddHostedService<SensorRunner>();
                 });
     }
 }

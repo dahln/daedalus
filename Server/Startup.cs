@@ -32,11 +32,6 @@ namespace daedalus.Server
                 options.UseSqlite($"Data Source=daedalus.db"));
 
             services.AddControllersWithViews();
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders =
-                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            });
 
             services.AddRazorPages();
         }
@@ -49,21 +44,7 @@ namespace daedalus.Server
             if (migrations.Count() > 0)
                 dbContext.Database.Migrate();
 
-            app.UseForwardedHeaders();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseWebAssemblyDebugging();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
