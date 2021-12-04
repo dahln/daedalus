@@ -27,6 +27,7 @@ ____
  - sudo ufw allow 'Nginx Full'
  - sudo ufw allow 'OpenSSH'
  - sudo ufw --force enable
+ - In browser, navigate to the ip address or name of the Pi. This will verify if Nginx is serving up a webpage and allowing access through the firewall
 
 ____
 ### CREATE APPLICATION KESTREL SERVICE
