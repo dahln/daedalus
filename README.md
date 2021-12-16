@@ -5,7 +5,7 @@
 ____
 ### INSTALL .NET ON RASPBERRY PI
  - Follow instructions in this repo:
- - https://github.com/pjgpetecodes/dotnet5pi
+ - https://github.com/dahln/dotnet-installer
 ____
 ### SETUP APPLICATION DIRECTORY
 ### IN THE 'PI' USER HOME DIRECTORY (it just makes it easier)
@@ -20,6 +20,7 @@ dotnet clean
 dotnet build
 dotnet publish
 scp -r .\bin\Debug\net6.0\publish\\* pi@daedalusiot:/home/pi/daedalus
+```
  - Where 'daedalusiot' is the name of the raspberry pi. Can use the ip address as well
 
 ____
