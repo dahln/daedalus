@@ -17,7 +17,7 @@ ____
  - dotnet clean
  - dotnet build
  - dotnet publish
- - scp -r .\bin\Debug\net5.0\publish\\* pi@daedalusiot:/home/pi/daedalus
+ - scp -r .\bin\Debug\net6.0\publish\\* pi@daedalusiot:/home/pi/daedalus
    - Where 'daedalusiot' is the name of the raspberry pi. Can use the ip address as well
 
 ____
