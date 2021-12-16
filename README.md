@@ -107,6 +107,8 @@ sudo journalctl -u daedalus.service
 sudo systemctl daemon-reload
 sudo systemctl status nginx
 sudo journalctl -u nginx
+
+vcgencmd measure_temp
 </code>
 </pre>
 
