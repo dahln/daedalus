@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace daedalus.Server.Database
+namespace climatepi.Server.Database
 {
     public class Condition
     {

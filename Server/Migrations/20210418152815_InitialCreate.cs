@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace daedalus.Server.Migrations
+namespace climatepi.Server.Migrations
 {
     public partial class InitialCreate : Migration
     {

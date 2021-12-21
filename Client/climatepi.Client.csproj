@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\daedalus.Shared.csproj" />
+    <ProjectReference Include="..\Shared\climatepi.Shared.csproj" />
   </ItemGroup>
 
 </Project>

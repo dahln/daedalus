@@ -22,8 +22,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Client\daedalus.Client.csproj" />
-		<ProjectReference Include="..\Shared\daedalus.Shared.csproj" />
+		<ProjectReference Include="..\Client\climatepi.Client.csproj" />
+		<ProjectReference Include="..\Shared\climatepi.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

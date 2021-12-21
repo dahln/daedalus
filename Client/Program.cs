@@ -8,9 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using BlazorSpinner;
-using daedalus.Client.Services;
+using climatepi.Client.Services;
 
-namespace daedalus.Client
+namespace climatepi.Client
 {
     public class Program
     {
@@ -19,9 +19,9 @@ namespace daedalus.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddHttpClient("daedalus.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+            builder.Services.AddHttpClient("climatepi.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
             // Supply HttpClient instances that include access tokens when making requests to the server project
-            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("daedalus.ServerAPI"));
+            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("climatepi.ServerAPI"));
 
             builder.Services.AddScoped<API>();
             builder.Services.AddScoped<SpinnerService>();

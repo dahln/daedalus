@@ -2,11 +2,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 16.0.0.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "daedalus.Server", "Server\daedalus.Server.csproj", "{F386EEAF-B1BB-426B-9D6D-2255DEC93871}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "climatepi.Server", "Server\climatepi.Server.csproj", "{F386EEAF-B1BB-426B-9D6D-2255DEC93871}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "daedalus.Client", "Client\daedalus.Client.csproj", "{28A88E01-0981-41D7-A7FB-12C002BFE956}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "climatepi.Client", "Client\climatepi.Client.csproj", "{28A88E01-0981-41D7-A7FB-12C002BFE956}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "daedalus.Shared", "Shared\daedalus.Shared.csproj", "{D379AC98-150A-406C-902A-F3BF7C19AC85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "climatepi.Shared", "Shared\climatepi.Shared.csproj", "{D379AC98-150A-406C-902A-F3BF7C19AC85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

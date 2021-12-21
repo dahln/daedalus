@@ -1,9 +1,10 @@
 ﻿@page "/"
 
-@using daedalus.Shared.Model
+@using climatepi.Shared.Model
 @using FluentDateTime
+@using System.Threading
 
-@inject daedalus.Client.Services.API API
+@inject climatepi.Client.Services.API API
 
 @if(results.Id != null)
 {
@@ -11,7 +12,7 @@
         <div class="col-lg-4 offset-lg-4 mt-2">
             <div class="card">
                 <h5 class="card-header">
-                    <i class="fas fa-temperature-high"></i> Current Conditions
+                    <i class="fas fa-temperature-high"></i> Current Conditions @results.LoggedAt.ToLocalTime()
                 </h5>
                 <div class="card-body">
                     <h6 class="card-title">Temperature: <span class="current">@(Math.Round((results.DegreesCelsius * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.DegreesCelsius, 2).ToString("0.00"))&deg;C)</span></h6>
@@ -36,12 +37,14 @@ else if (results.Id == null)
 
     private Condition results { get; set; } = new Condition();
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnInitialized()
     {
-        results = await API.CurrentConditions();
+        var timer = new Timer(async o => await AutoUpdate(o), null, 0, 60000);
     }
 
-    
-
+    private async Task AutoUpdate(object o)
+    {
+        await API.CurrentConditions();
+    }
 }
 

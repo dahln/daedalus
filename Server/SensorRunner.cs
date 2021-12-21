@@ -1,4 +1,4 @@
-﻿using daedalus.Server.Database;
+﻿using climatepi.Server.Database;
 using Iot.Device.Bmxx80;
 using Iot.Device.Bmxx80.PowerMode;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace daedalus.Server
+namespace climatepi.Server
 {
 
     public class SensorRunner : BackgroundService
@@ -39,7 +39,7 @@ namespace daedalus.Server
                 //Using the IServiceProvider, and a 'using' create a scope and a GetRequiredServices to create the scoped service
                 using (var scope = Services.CreateScope())
                 {
-                    var _db = scope.ServiceProvider.GetRequiredService<daedalusDBContext>();
+                    var _db = scope.ServiceProvider.GetRequiredService<climatepiDBContext>();
 
                     var i2cSettings = new I2cConnectionSettings(1, Bme280.SecondaryI2cAddress);
                     using I2cDevice i2cDevice = I2cDevice.Create(i2cSettings);

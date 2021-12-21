@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace daedalus.Server.Database
+namespace climatepi.Server.Database
 {
-    public class daedalusDBContext : DbContext
+    public class climatepiDBContext : DbContext
     {
-        public daedalusDBContext(DbContextOptions options) : base(options)
+        public climatepiDBContext(DbContextOptions options) : base(options)
         {
         }
 

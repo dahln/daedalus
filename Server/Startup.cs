@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using Microsoft.AspNetCore.HttpOverrides;
-using daedalus.Server.Database;
+using climatepi.Server.Database;
 
-namespace daedalus.Server
+namespace climatepi.Server
 {
     public class Startup
     {
@@ -28,8 +28,8 @@ namespace daedalus.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<daedalusDBContext>(options =>
-                options.UseSqlite($"Data Source=daedalus.db"));
+            services.AddDbContext<climatepiDBContext>(options =>
+                options.UseSqlite($"Data Source=climatepi.db"));
 
             services.AddControllersWithViews();
 
@@ -37,7 +37,7 @@ namespace daedalus.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, daedalusDBContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, climatepiDBContext dbContext)
         {
             //Automatic DB migrations on startup.
             var migrations = dbContext.Database.GetPendingMigrations();

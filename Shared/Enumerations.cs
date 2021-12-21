@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace daedalus.Shared.Model
+namespace climatepi.Shared.Model
 {
     public enum PeriodType
     {

@@ -3,12 +3,12 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using daedalus.Server.Database;
+using climatepi.Server.Database;
 
-namespace daedalus.Server.Migrations
+namespace climatepi.Server.Migrations
 {
-    [DbContext(typeof(daedalusDBContext))]
-    partial class daedalusDBContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(climatepiDBContext))]
+    partial class climatepiDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -16,7 +16,7 @@ namespace daedalus.Server.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.5");
 
-            modelBuilder.Entity("daedalus.Server.Database.Condition", b =>
+            modelBuilder.Entity("climatepi.Server.Database.Condition", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");

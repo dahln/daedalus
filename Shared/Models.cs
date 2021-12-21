@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace daedalus.Shared.Model
+namespace climatepi.Shared.Model
 {
     /// <summary>
     /// "Conditions" meaning this JWT could contain multiple conditions.

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace daedalus.Server.Migrations
+namespace climatepi.Server.Migrations
 {
     public partial class RemovingAltitude : Migration
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace daedalus.Server.Utility
+namespace climatepi.Server.Utility
 {
     static public class ToSharedModels
     {

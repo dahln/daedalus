@@ -1,4 +1,4 @@
-# daedalus
+# climatepi
 
 ### INSTALL RASPBERRY PI OS ON PI
 
@@ -10,7 +10,7 @@ ____
 ### SETUP APPLICATION DIRECTORY
 ### IN THE 'PI' USER HOME DIRECTORY (it just makes it easier)
 ```
-sudo mkdir daedalus
+sudo mkdir climatepi
 ```
 ____
 ### COPY PROJECT FROM DEV MACHINE TO RASPBERRY PI
@@ -19,9 +19,9 @@ On "Dev" machine, from "Server" folder
 dotnet clean
 dotnet build
 dotnet publish
-scp -r .\bin\Debug\net6.0\publish\\* pi@daedalusiot:/home/pi/daedalus
+scp -r .\bin\Debug\net6.0\publish\\* pi@climatepi:/home/pi/climatepi
 ```
- - Where 'daedalusiot' is the name of the raspberry pi. Can use the ip address as well
+ - Where 'climatepiiot' is the name of the raspberry pi. Can use the ip address as well
 
 ____
 ### SETUP SERVER-- INSTALL THIS STUFF
@@ -38,21 +38,21 @@ ____
 ### CREATE APPLICATION KESTREL SERVICE
 ### CREATE THIS FILE, AND THEN ADD THE CONTENT BELOW
 ```
-sudo nano /etc/systemd/system/daedalus.service
+sudo nano /etc/systemd/system/climatepi.service
 ```
 
 ```
 [Unit]
-Description=daedalus iot process
+Description=climatepi iot process
 
 [Service]
-WorkingDirectory=/home/pi/daedalus
-ExecStart=/opt/dotnet/dotnet /home/pi/daedalus/daedalus.Server.dll
+WorkingDirectory=/home/pi/climatepi
+ExecStart=/opt/dotnet/dotnet /home/pi/climatepi/climatepi.Server.dll
 Restart=always
 # Restart service after 10 seconds if the dotnet service crashes:
 RestartSec=10
 KillSignal=SIGINT
-SyslogIdentifier=daedalus-iot
+SyslogIdentifier=climatepi-iot
 User=pi
 
 [Install]
@@ -63,10 +63,10 @@ WantedBy=multi-user.target
 ____
 ### ENABLE THE NEW KESTREL SERVICE
 ```
-sudo systemctl enable daedalus.service
+sudo systemctl enable climatepi.service
 ```
 ```
-sudo systemctl restart daedalus.service
+sudo systemctl restart climatepi.service
 ```
 ____
 ### CREATE NGINX CONFIG FOR NEW APP
@@ -76,7 +76,7 @@ sudo nano /etc/nginx/sites-enabled/default
 ```
 
 ```
-upstream daedalus_server {
+upstream climatepi_server {
     server localhost:5000;
 }
 server {
@@ -85,7 +85,7 @@ server {
 
         server_name _;
         location / {
-                proxy_pass         http://daedalus_server;
+                proxy_pass         http://climatepi_server;
                 proxy_redirect     off;
                 proxy_set_header   Host $host;
                 proxy_set_header   X-Real-IP $remote_addr;
@@ -112,10 +112,10 @@ ____
 ### HELPFUL TROUBLESHOOTING COMMANDS
 
 ```
-sudo systemctl enable daedalus.service
-sudo systemctl restart daedalus.service
-sudo systemctl status daedalus.service
-sudo journalctl -u daedalus.service
+sudo systemctl enable climatepi.service
+sudo systemctl restart climatepi.service
+sudo systemctl status climatepi.service
+sudo journalctl -u climatepi.service
 sudo systemctl daemon-reload
 sudo systemctl status nginx
 sudo journalctl -u nginx

@@ -6,11 +6,11 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using daedalus.Shared;
+using climatepi.Shared;
 using BlazorSpinner;
-using daedalus.Shared.Model;
+using climatepi.Shared.Model;
 
-namespace daedalus.Client.Services
+namespace climatepi.Client.Services
 {
     public class API
     {

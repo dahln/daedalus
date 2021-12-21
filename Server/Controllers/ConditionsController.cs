@@ -4,22 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using daedalus.Shared;
-using daedalus.Server.Database;
+using climatepi.Shared;
+using climatepi.Server.Database;
 using Microsoft.EntityFrameworkCore;
-using daedalus.Server.Utility;
+using climatepi.Server.Utility;
 using Microsoft.Extensions.Configuration;
-using daedalus.Shared.Model;
+using climatepi.Shared.Model;
 
-namespace daedalus.Server.Controllers
+namespace climatepi.Server.Controllers
 {
     [ApiController]
     public class ConditionsController : ControllerBase
     {
-        private readonly daedalusDBContext _db;
+        private readonly climatepiDBContext _db;
         private static IConfiguration _configuration;
 
-        public ConditionsController(IConfiguration configuration, daedalusDBContext db)
+        public ConditionsController(IConfiguration configuration, climatepiDBContext db)
         {
             _db = db;
             _configuration = configuration;
