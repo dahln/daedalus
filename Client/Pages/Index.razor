@@ -37,6 +37,11 @@ else if (results.Id == null)
 
     private Condition results { get; set; } = new Condition();
 
+    protected override async Task OnParametersSetAsync()
+    {
+        results = await API.CurrentConditions();
+    }
+    /*
     protected override void OnInitialized()
     {
         var timer = new Timer(async o => await AutoUpdate(o), null, 0, 60000);
@@ -44,7 +49,8 @@ else if (results.Id == null)
 
     private async Task AutoUpdate(object o)
     {
-        await API.CurrentConditions();
+        results = await API.CurrentConditions();
     }
+    */
 }
 
