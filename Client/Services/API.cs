@@ -25,6 +25,10 @@ namespace daedalus.Client.Services
             _spinnerService = spinnerService;
         }
         
+        async public Task<Condition> CurrentConditions()
+        {
+            return await GetAsync<Condition>($"api/v1/condition/current");
+        }
         async public Task<ConditionSearchResponse> SearchConditions(Search model)
         {
             return await PostAsync<ConditionSearchResponse>($"api/v1/condition/search", model);

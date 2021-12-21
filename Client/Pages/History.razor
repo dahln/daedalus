@@ -1,0 +1,281 @@
+﻿@page "/history"
+
+@using daedalus.Shared.Model
+@using FluentDateTime
+
+@inject daedalus.Client.Services.API API
+
+<div class="row mt-4">
+    <div class="col-lg-3">
+        <div class="input-group">
+            <select class="form-control" @bind="ReportPeriod">
+                <option value="@PeriodType.Today">@PeriodType.Today.GetDescription()</option>
+                <option value="@PeriodType.Yesterday">@PeriodType.Yesterday.GetDescription()</option>
+                <option value="@PeriodType.LastSeven">@PeriodType.LastSeven.GetDescription()</option>
+                <option value="@PeriodType.CurrentMonth">@PeriodType.CurrentMonth.GetDescription()</option>
+                <option value="@PeriodType.PreviousMonth">@PeriodType.PreviousMonth.GetDescription()</option>
+                <option value="@PeriodType.CurrentYear">@PeriodType.CurrentYear.GetDescription()</option>
+                <option value="@PeriodType.PreviousYear">@PeriodType.PreviousYear.GetDescription()</option>
+            </select>
+            <div class="input-group-append">
+                <button class="btn btn-success" type="button" @onclick="() => SearchConditions(0)">Run</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (results.Total > 0 && Ready)
+{
+    <div class="row mt-3">
+        <div class="col-lg-4 mt-2">
+            <div class="card">
+                <h5 class="card-header">
+                    <i class="fas fa-temperature-high"></i> Temperature
+                </h5>
+                <div class="card-body">
+                    <h6 class="card-title">Low: <span class="low">@(Math.Round((results.LowTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.LowTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
+                    <h6 class="card-title">Average: <span class="average">@(Math.Round((results.AverageTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.AverageTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
+                    <h6 class="card-title">High: <span class="high">@(Math.Round((results.HighTemperature * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.HighTemperature, 2).ToString("0.00"))&deg;C)</span></h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-2">
+            <div class="card">
+                <h5 class="card-header">
+                    <i class="fas fa-umbrella"></i> Humidity
+                </h5>
+                <div class="card-body">
+                    <h6 class="card-title">Low: <span class="low">@(Math.Round(results.LowHumidity, 2).ToString("0.00")) %</span></h6>
+                    <h6 class="card-title">Average: <span class="average">@(Math.Round(results.AverageHumidity, 2).ToString("0.00")) %</span></h6>
+                    <h6 class="card-title">High: <span class="high">@(Math.Round(results.HighHumidity, 2).ToString("0.00")) %</span></h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-2">
+            <div class="card">
+                <h5 class="card-header">
+                    <i class="fas fa-wind"></i> Pressure
+                </h5>
+                <div class="card-body">
+                    <h6 class="card-title">Low: <span class="low">@(Math.Round(results.LowPressure, 2).ToString("0.00")) mbar</span></h6>
+                    <h6 class="card-title">Average: <span class="average">@(Math.Round(results.AveragePressure, 2).ToString("0.00")) mbar</span></h6>
+                    <h6 class="card-title">High: <span class="high">@(Math.Round(results.HighPressure, 2).ToString("0.00")) mbar</span></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-lg-6">
+            <div class="input-group page-size mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Size</label>
+                </div>
+                <select class="form-control" value="@Size" @onchange="PageSizeChange">
+                    <option value="10">10</option>
+                    <option value="60">60</option>
+                    <option value="120">120</option>
+                    <option value="240">240</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <nav aria-label="Page navigation">
+                <ul class="pagination float-right">
+                    @if ((Page + 1) > 1)
+                    {
+                        <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page - 1))">Previous</div></li>
+                    }
+                    <li class="page-item"><div class="page-link">Page @(results.Total == 0 ? 0 : (Page + 1)) of @(Math.Ceiling((double)results.Total / Size))</div></li>
+                    @if ((Page + 1) < (Math.Ceiling((double)results.Total / Size)))
+                    {
+                        <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page + 1))">Next</div></li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Logged At</th>
+                        <th>Temperature</th>
+                        <th>Humidity</th>
+                        <th>Pressure</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var condition in results.Data)
+                    {
+                        <tr>
+                            <td>@condition.LoggedAt.ToLocalTime()</td>
+                            <td>@(Math.Round((condition.DegreesCelsius * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(condition.DegreesCelsius, 2).ToString("0.00"))&deg;C)</td>
+                            <td>@(Math.Round(condition.HumidityPercentage, 2).ToString("0.00")) %</td>
+                            <td>@(Math.Round(condition.PressureMillibars, 2).ToString("0.00")) mbar</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (Size != null)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination float-right">
+                        @if ((Page + 1) > 1)
+                        {
+                            <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page - 1))">Previous</div></li>
+                        }
+                        <li class="page-item"><div class="page-link">Page @(results.Total == 0 ? 0 : (Page + 1)) of @(Math.Ceiling((double)results.Total / Size))</div></li>
+                        @if ((Page + 1) < (Math.Ceiling((double)results.Total / Size)))
+                        {
+                            <li class="page-item pointer"><div class="page-link" @onclick="(() => SearchConditions(Page + 1))">Next</div></li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    }
+}
+else if (results.Total == 0 && Ready)
+{
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h5 class="text-center">No Data</h5>
+            <h5 class="text-center">Try another reporting period.</h5>
+        </div>
+    </div>
+}
+
+@code {
+
+    private bool Ready { get; set; } = false;
+    private int Size { get; set; } = 10;
+    private int Page { get; set; }
+    private DateTime Start { get; set; } = DateTime.UtcNow.AddHours(-4).ToLocalTime();
+    private DateTime End { get; set; } = DateTime.UtcNow.ToLocalTime();
+    private ConditionSearchResponse results { get; set; } = new ConditionSearchResponse();
+    private List<Period> Periods { get; set; } = new List<Period>();
+    private PeriodType ReportPeriod { get; set; } = PeriodType.Today;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Periods = GetReportPeriods();
+
+        await SearchConditions(0);
+        Ready = true;
+    }
+
+    async private Task SearchConditions(int page)
+    {
+        //Get the start and end dates from the picker
+        var selectedPeriod = Periods.Where(p => p.PeriodType == ReportPeriod).FirstOrDefault();
+        Start = selectedPeriod.Start;
+        End = selectedPeriod.End;
+
+        //Update the component 'Page' property and then pass it to the server
+        Page = page;
+        Search model = new Search()
+        {
+            Start = Start,
+            End = End,
+            Page = page,
+            Size = Size
+        };
+
+        results = await API.SearchConditions(model);
+    }
+
+    async private Task PageSizeChange(ChangeEventArgs e)
+    {
+        var value = e.Value.ToString();
+        if (int.TryParse(e.Value.ToString(), out int size))
+        {
+            Size = size;
+        }
+        else
+        {
+            Size = 10;
+        }
+        await SearchConditions(0);
+    }
+
+    private List<Period> GetReportPeriods()
+    {
+
+        DateTime todayStart = DateTime.Now.BeginningOfDay();
+        DateTime todayEnd = DateTime.Now.EndOfDay();
+
+        DateTime yesterdayStart = DateTime.Now.PreviousDay().BeginningOfDay();
+        DateTime yesterdayEnd = DateTime.Now.PreviousDay().EndOfDay();
+
+        DateTime lastSevenStart = DateTime.Now.Subtract(new TimeSpan(7, 0, 0, 0)).BeginningOfDay();
+        DateTime lastSevenEnd = DateTime.Now.EndOfDay();
+
+        DateTime currentMonthStart = DateTime.Now.FirstDayOfMonth().BeginningOfDay();
+        DateTime currentMonthEnd = DateTime.Now.LastDayOfMonth().EndOfDay();
+
+        DateTime lastMonthStart = DateTime.Now.PreviousMonth().FirstDayOfMonth().BeginningOfDay();
+        DateTime lastMonthEnd = DateTime.Now.PreviousMonth().LastDayOfMonth().EndOfDay();
+
+        DateTime currentYearStart = DateTime.Now.FirstDayOfYear().BeginningOfDay();
+        DateTime currentYearEnd = DateTime.Now.LastDayOfYear().EndOfDay();
+
+        DateTime previousYearStart = DateTime.Now.PreviousYear().FirstDayOfYear().BeginningOfDay();
+        DateTime previousYearEnd = DateTime.Now.PreviousYear().LastDayOfYear().EndOfDay();
+
+        List<Period> periods = new List<Period>()
+        {
+                    new Period()
+                    {
+                        PeriodType = PeriodType.Today,
+                        Start = todayStart,
+                        End = todayEnd,
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.Yesterday,
+                        Start = yesterdayStart,
+                        End = yesterdayEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.LastSeven,
+                        Start = lastSevenStart,
+                        End = lastSevenEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.CurrentMonth,
+                        Start = currentMonthStart,
+                        End = currentMonthEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.PreviousMonth,
+                        Start = lastMonthStart,
+                        End = lastMonthEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.CurrentYear,
+                        Start = currentYearStart,
+                        End = currentYearEnd
+                    },
+                    new Period()
+                    {
+                        PeriodType = PeriodType.PreviousYear,
+                        Start = previousYearStart,
+                        End = previousYearEnd
+                    }
+                };
+
+        return periods;
+    }
+}
+

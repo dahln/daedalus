@@ -25,6 +25,24 @@ namespace daedalus.Server.Controllers
             _configuration = configuration;
         }
 
+        [Route("api/v1/condition/current")]
+        [HttpGet]
+        async public Task<IActionResult> CurrentCondition() 
+        {
+            var query = _db.Conditions.AsQueryable();
+
+            var response = new Shared.Model.Condition();
+
+            var anyResults = await query.AnyAsync();
+            if (!anyResults)
+                return Ok(response);
+
+            var condition = await query.OrderByDescending(r => r.LoggedAt).FirstOrDefaultAsync();
+            response = condition.ToSharedCondition();
+
+            return Ok(response);
+        }
+
         [Route("api/v1/condition/search")]
         [HttpPost]
         async public Task<IActionResult> SearchCondition([FromBody] Search model) 
