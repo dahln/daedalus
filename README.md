@@ -1,5 +1,7 @@
 # climatepi
 
+Use a Raspberry Pi, with a BME280 sensor to measure temperature, pressure, and humidity. Application reads the sensor data, saves it in a Sqlite DB, and hosts a small website on the Pi to view the data.
+
 ### INSTALL RASPBERRY PI OS ON PI
 
 ____
