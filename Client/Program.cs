@@ -25,6 +25,7 @@ namespace daedalus.Client
 
             builder.Services.AddScoped<API>();
             builder.Services.AddScoped<SpinnerService>();
+            builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
             await builder.Build().RunAsync();
         }

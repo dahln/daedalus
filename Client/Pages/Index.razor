@@ -5,22 +5,32 @@
 
 @inject daedalus.Client.Services.API API
 
-<div class="row mt-3">
-    <div class="col-lg-4 offset-lg-4 mt-2">
-        <div class="card">
-            <h5 class="card-header">
-                <i class="fas fa-temperature-high"></i> Current Conditions
-            </h5>
-            <div class="card-body">
-                <h6 class="card-title">Temperature: <span class="average">@(Math.Round((results.DegreesCelsius * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.DegreesCelsius, 2).ToString("0.00"))&deg;C)</span></h6>
-                <h6 class="card-title">Average: <span class="average">@(Math.Round(results.HumidityPercentage, 2).ToString("0.00")) %</span></h6>
-                <h6 class="card-title">Average: <span class="average">@(Math.Round(results.PressureMillibars, 2).ToString("0.00")) mbar</span></h6>
+@if(results.Id != null)
+{
+    <div class="row mt-3">
+        <div class="col-lg-4 offset-lg-4 mt-2">
+            <div class="card">
+                <h5 class="card-header">
+                    <i class="fas fa-temperature-high"></i> Current Conditions
+                </h5>
+                <div class="card-body">
+                    <h6 class="card-title">Temperature: <span class="current">@(Math.Round((results.DegreesCelsius * 1.8) + 32, 2).ToString("0.00"))&deg;F &ThickSpace;(@(Math.Round(results.DegreesCelsius, 2).ToString("0.00"))&deg;C)</span></h6>
+                    <h6 class="card-title">Humidity: <span class="current">@(Math.Round(results.HumidityPercentage, 2).ToString("0.00")) %</span></h6>
+                    <h6 class="card-title">Pressure: <span class="current">@(Math.Round(results.PressureMillibars, 2).ToString("0.00")) mbar</span></h6>
+                </div>
             </div>
         </div>
+        
     </div>
-    
-</div>
-
+}
+else if (results.Id == null)
+{
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h5 class="text-center">No Data</h5>
+        </div>
+    </div>
+}
 
 @code {
 
@@ -30,6 +40,8 @@
     {
         results = await API.CurrentConditions();
     }
+
+    
 
 }
 

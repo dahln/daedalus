@@ -38,7 +38,8 @@ namespace daedalus.Server.Controllers
                 return Ok(response);
 
             var condition = await query.OrderByDescending(r => r.LoggedAt).FirstOrDefaultAsync();
-            response = condition.ToSharedCondition();
+            if(condition != null)
+                response = condition.ToSharedCondition();
 
             return Ok(response);
         }

@@ -2,16 +2,8 @@
     cursor: pointer;
 }
 
-.low {
-    color: steelblue;
-}
-
-.average {
-    color: green;
-}
-
-.high {
-    color: orangered;
+.current {
+    color: mediumpurple;
 }
 
 .page-size {
