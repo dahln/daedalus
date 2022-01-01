@@ -15,7 +15,7 @@ ____
 ### SETUP APPLICATION DIRECTORY
 ### IN THE 'PI' USER HOME DIRECTORY (it just makes it easier)
 ```
-sudo mkdir climatepi
+mkdir climatepi
 ```
 ____
 ### COPY PROJECT FROM DEV MACHINE TO RASPBERRY PI
